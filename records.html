@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Records</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <h2>Time Log</h2>
+    <table id="timeLogTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Day of Week</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Rate</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+    <!-- Firebase Configuration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtsvTdPydPIdn1GuGpj0qd0oYk2gR4Fzk",
+            authDomain: "timemanager-b24cc.firebaseapp.com",
+            databaseURL: "https://timemanager-b24cc-default-rtdb.firebaseio.com",
+            projectId: "timemanager-b24cc",
+            storageBucket: "timemanager-b24cc.appspot.com",
+            messagingSenderId: "134877240078",
+            appId: "1:134877240078:web:7d0eae6b605a8c1470155f",
+            measurementId: "G-HKYCRTSC73"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        var database = firebase.database();
+
+
+        var timeLogRef = database.ref('timeLogs');
+
+        function populateTable(snapshot) {
+            var tableBody = document.querySelector("#timeLogTable tbody");
+            snapshot.forEach(function (childSnapshot) {
+                var childData = childSnapshot.val();
+                var row = tableBody.insertRow();
+                var dateCell = row.insertCell(0);
+                var dayOfWeekCell = row.insertCell(1);
+                var timeInCell = row.insertCell(2);
+                var timeOutCell = row.insertCell(3);
+                var remainingMinutesCell = row.insertCell(4);
+
+                dateCell.textContent = childData.date;
+                dayOfWeekCell.textContent = childData.dayOfWeek;
+                timeInCell.textContent = childData.timeIn;
+                timeOutCell.textContent = childData.timeOut;
+
+                // Retrieve remaining minutes from "timeLogs" parent node
+                var dateKey = childSnapshot.key; // Compare the current date and get if they have similar values
+                var timeLogsRef = database.ref('timeLogs/' + dateKey);
+                timeLogsRef.once('value', function (timeLogsSnapshot) {
+                    var timeLogsData = timeLogsSnapshot.val();
+                    if (timeLogsData && timeLogsData.remainingMinutes !== undefined) {
+                        // Multiply remainingMinutes by 3.14 (rate per minute)
+                        var remainingMinutes = timeLogsData.remainingMinutes;
+                        var product = remainingMinutes * 3.14;
+
+                        // Save the product back to the database
+                        timeLogsRef.update({ dayRate: product });
+
+                        // Update the table cell with the product value
+                        remainingMinutesCell.textContent = product;
+                    } else {
+                        remainingMinutesCell.textContent = "Data not available";
+                    }
+                });
+            });
+        }
+
+
+
+        timeLogRef.on('value', function (snapshot) {
+
+            document.querySelector("#timeLogTable tbody").innerHTML = "";
+
+            populateTable(snapshot);
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+</body>
+
+</html>

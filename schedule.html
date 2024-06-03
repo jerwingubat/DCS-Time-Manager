@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Days of the Week</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 80px;
+            background-color: #333;
+            transition: width 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .sidebar.active {
+            width: 80px;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar li {
+            text-align: left;
+        }
+
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: block;
+            padding: 10px;
+        }
+
+        .sidebar a:hover {
+            color: #ffd700;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            display: flex;
+        }
+
+        .input-group input[type="time"] {
+            flex: 1;
+            width: auto;
+            padding: 5px;
+            border: 5px solidrgb(0, 0, 0)c;
+            border-radius: 3px;
+            margin-right: 10px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: dodgerblue;
+        }
+        @media only screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100vw;
+            }
+
+            .content {
+                width: 90vw;
+            }
+            .contactHours{
+                width: 20vw;
+            }
+            input[type="time"],
+            button {
+                margin: 10px 0;
+                padding: 10px;
+                width: 90vw;
+                box-sizing: border-box;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <h2>Menu</h2>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="records.html">Records</a></li>
+                <li><a href="#">Schedule</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <ul>
+                <li>
+                    <form id="monday-form">
+                        <label for="monday-timein">Monday:</label>
+                        <div class="input-group">
+                            <input type="time" id="monday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="monday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <form id="tuesday-form">
+                        <label for="tuesday-timein">Tuesday:</label>
+                        <div class="input-group">
+                            <input type="time" id="tuesday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="tuesday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <form id="wednesday-form">
+                        <label for="wednesday-timein">Wednesday:</label>
+                        <div class="input-group">
+                            <input type="time" id="wednesday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="wednesday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <form id="thursday-form">
+                        <label for="thursday-timein">Thursday:</label>
+                        <div class="input-group">
+                            <input type="time" id="thursday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="thursday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <form id="friday-form">
+                        <label for="friday-timein">Friday:</label>
+                        <div class="input-group">
+                            <input type="time" id="friday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="friday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+                <li>
+                    <form id="saturday-form">
+                        <label for="saturday-timein">Saturday:</label>
+                        <div class="input-group">
+                            <input type="time" id="saturday-timein" name="timein" placeholder="Time In">
+                            <input type="time" id="saturday-timeout" name="timeout" placeholder="Time Out">
+                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="submit" value="Submit">
+                        </div>
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtsvTdPydPIdn1GuGpj0qd0oYk2gR4Fzk",
+            authDomain: "timemanager-b24cc.firebaseapp.com",
+            databaseURL: "https://timemanager-b24cc-default-rtdb.firebaseio.com",
+            projectId: "timemanager-b24cc",
+            storageBucket: "timemanager-b24cc.appspot.com",
+            messagingSenderId: "134877240078",
+            appId: "1:134877240078:web:7d0eae6b605a8c1470155f",
+            measurementId: "G-HKYCRTSC73"
+        };
+        firebase.initializeApp(firebaseConfig);
+
+        const database = firebase.database();
+
+        function handleSubmit(event, day) {
+            event.preventDefault();
+            const form = event.target;
+            const timeIn = form['timein'].value;
+            const timeOut = form['timeout'].value;
+            const contactHours = form['contactHours'].value;
+            const minutesContactHours = form['contactHours'].value;
+
+            // Convert contact hours to minutes multiplied by 60 (60 seconds per minute)
+            const contactHoursInMinutes = parseInt(contactHours) * 60;
+
+            if (timeIn.trim() === '' || timeOut.trim() === '' || contactHours.trim() === '') {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // Saving Schedule per day into database using "schedule" node as key
+            database.ref('schedule/' + day).set({
+                timeIn: timeIn,
+                timeOut: timeOut,
+                minutesContactHours: contactHoursInMinutes,
+                contactHours: contactHours
+            }).then(() => {
+                console.log('Data saved successfully');
+                // Reset the form value into null
+                form.reset();
+                alert('Data submitted successfully!');
+            }).catch((error) => {
+                console.error('Error saving data:', error);
+            });
+        }
+
+
+
+
+        // Add event listeners to each form
+        document.getElementById('monday-form').addEventListener('submit', (event) => handleSubmit(event, 'monday'));
+        document.getElementById('tuesday-form').addEventListener('submit', (event) => handleSubmit(event, 'tuesday'));
+        document.getElementById('wednesday-form').addEventListener('submit', (event) => handleSubmit(event, 'wednesday'));
+        document.getElementById('thursday-form').addEventListener('submit', (event) => handleSubmit(event, 'thursday'));
+        document.getElementById('friday-form').addEventListener('submit', (event) => handleSubmit(event, 'friday'));
+        document.getElementById('saturday-form').addEventListener('submit', (event) => handleSubmit(event, 'saturday'));
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+
+
+</body>
+
+</html>
