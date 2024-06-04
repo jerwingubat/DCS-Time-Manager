@@ -132,6 +132,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
         import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -147,6 +148,12 @@
         //yung firebase config na set is from firebase, ginagamit to para magkaroon ng connecttion ang system and ang database
         firebase.initializeApp(firebaseConfig);
 
+        const isAuthenticated = localStorage.getItem('authToken');
+
+        if (!isAuthenticated) {
+            alert('You need to log in first.');
+            window.location.href = 'index.html';
+        }
         document.getElementById("submitTimeIn").addEventListener("click", function () {
             submitTime('timeIn');
         });
