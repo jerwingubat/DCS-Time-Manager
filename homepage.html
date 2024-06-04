@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<title>Sidebar 03</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css">
+	<style>
+	.content {
+			flex: 1;
+			padding: 20px;
+		}
+	
+		input[type="time"],
+		button {
+			margin: 10px 0;
+			padding: 10px;
+			width: 100%;
+			box-sizing: border-box;
+		}
+
+		#currentDate {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		/* Media queries for responsiveness */
+		@media only screen and (max-width: 768px) {
+			.container {
+				flex-direction: column;
+			}
+
+
+
+			.content {
+				width: 100%;
+			}
+
+			input[type="time"],
+			button {
+				margin: 10px 0;
+				padding: 10px;
+				width: 90vw;
+				box-sizing: border-box;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<div class="wrapper d-flex align-items-stretch">
+		<nav id="sidebar" class="active">
+			<div class="custom-menu">
+				<button type="button" id="sidebarCollapse" class="btn btn-primary">
+					<i class="fa fa-bars"></i>
+					<span class="sr-only">Toggle Menu</span>
+				</button>
+			</div>
+			<div class="p-4">
+				<h1><a href="index.html" class="logo">Flash</a></h1>
+				<ul class="list-unstyled components mb-5">
+					<li class="active">
+						<a href="#"><span class="fa fa-home mr-3"></span> Home</a>
+					</li>
+					<li>
+						<a href="#"><span class="fa fa-user mr-3"></span> About</a>
+					</li>
+					<li>
+						<a href="#"><span class="fa fa-briefcase mr-3"></span> Portfolio</a>
+					</li>
+					<li>
+						<a href="#"><span class="fa fa-sticky-note mr-3"></span> Blog</a>
+					</li>
+					<li>
+						<a href="#"><span class="fa fa-paper-plane mr-3"></span> Contact</a>
+					</li>
+				</ul>
+
+				<div class="mb-5">
+					<h3 class="h6 mb-3">Subscribe for newsletter</h3>
+					<form action="#" class="subscribe-form">
+						<div class="form-group d-flex">
+							<div class="icon"><span class="icon-paper-plane"></span></div>
+							<input type="text" class="form-control" placeholder="Enter Email Address">
+						</div>
+					</form>
+				</div>
+
+				<div class="footer">
+					<p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+						Copyright &copy;
+						<script>document.write(new Date().getFullYear());</script> All rights reserved | This template
+						is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com"
+							target="_blank">Colorlib.com</a>
+						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+					</p>
+				</div>
+
+			</div>
+		</nav>
+
+		<!-- Page Content  -->
+		<div id="content" class="p-4 p-md-5 pt-5">
+			<div class="content">
+				<h2>Time Tracker</h2>
+				<form id="timeForm">
+					<div id="currentDate"></div>
+					<div id="weekDay"></div>
+					<label for="timeIn">Time In:</label>
+					<input type="time" id="timeIn" name="timeIn" required>
+					<button type="button" id="submitTimeIn">Submit Time In</button>
+					<br>
+					<label for="timeOut">Time Out:</label>
+					<input type="time" id="timeOut" name="timeOut" required>
+					<button type="button" id="submitTimeOut">Submit Time Out</button>
+				</form>
+				<div id="timeDisplay"></div>
+			</div>
+		</div>
+	</div>
+	<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
+        import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBtsvTdPydPIdn1GuGpj0qd0oYk2gR4Fzk",
+            authDomain: "timemanager-b24cc.firebaseapp.com",
+            databaseURL: "https://timemanager-b24cc-default-rtdb.firebaseio.com",
+            projectId: "timemanager-b24cc",
+            storageBucket: "timemanager-b24cc.appspot.com",
+            messagingSenderId: "134877240078",
+            appId: "1:134877240078:web:7d0eae6b605a8c1470155f",
+            measurementId: "G-HKYCRTSC73"
+        };
+        //yung firebase config na set is from firebase, ginagamit to para magkaroon ng connecttion ang system and ang database
+        firebase.initializeApp(firebaseConfig);
+
+        const isAuthenticated = localStorage.getItem('authToken');
+
+        if (!isAuthenticated) {
+            alert('You need to log in first.');
+            window.location.href = 'index.html';
+        }
+        document.getElementById("submitTimeIn").addEventListener("click", function () {
+            submitTime('timeIn');
+        });
+
+        document.getElementById("submitTimeOut").addEventListener("click", function () {
+            submitTime('timeOut');
+        });
+
+        var currentDateElement = document.getElementById('currentDate');
+        var currentWeekDay = document.getElementById('weekDay');
+        var optionsWeekDay = { weekday: 'long' };
+        var options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        var currentDate = new Date().toLocaleDateString('en-US', options);
+        var currentDay = new Date().toLocaleDateString('en-US', optionsWeekDay);
+        currentDateElement.textContent = 'Current Date: ' + currentDate + ', ' + currentDay;
+
+        function submitTime(timeType) {
+            var timeValue = document.getElementById(timeType).value;
+            var currentDate = new Date();
+            var dateKey = formatDateKey(currentDate);
+            var dayOfWeek = getDayOfWeek();
+
+            if (timeValue.trim() === "") {
+                alert("Please enter a valid time.");
+                return;
+            }
+
+            var database = firebase.database();
+
+            var scheduleRef = database.ref('schedule');
+            scheduleRef.once('value', function (snapshot) {
+                var scheduleData = snapshot.val();
+                var contactHoursData = scheduleData[dayOfWeek];
+
+                if (!contactHoursData || !contactHoursData.timeIn) {
+                    alert("Schedule data not available for the current day.");
+                    return;
+                }
+
+                var scheduledTimeIn = contactHoursData.timeIn;
+                var scheduledTimeOut = contactHoursData.timeOut;
+                var scheduledTimeInDate = new Date(currentDate.toDateString() + ' ' + scheduledTimeIn);
+                var scheduledTimeOutDate = new Date(currentDate.toDateString() + ' ' + scheduledTimeOut);
+                var timeInDate = new Date(currentDate.toDateString() + ' ' + timeValue);
+
+                var timeDifferenceInMinutes = Math.floor((timeInDate - scheduledTimeInDate) / (1000 * 60));
+
+                var lateMinutes = Math.max(0, timeDifferenceInMinutes);
+
+                var minutesContactHours = (contactHoursData.minutesContactHours || 0);
+                var totalMinutesRendered = minutesContactHours;
+
+                if (timeType === 'timeOut' && timeInDate >= scheduledTimeOutDate) {
+
+                    var timeLogsRef = database.ref('timeLogs/' + dateKey);
+                    timeLogsRef.once('value', function (snapshot) {
+                        var timeLogsData = snapshot.val();
+                        var minutesLate = timeLogsData ? timeLogsData.minutesLate || 0 : 0;
+                        totalMinutesRendered = Math.max(0, minutesContactHours - minutesLate);
+
+                        console.log("Total rendered minutes:", totalMinutesRendered);
+
+                        timeLogsData['remainingMinutes'] = totalMinutesRendered;
+                        timeLogsRef.set(timeLogsData);
+                    });
+                } else {
+                    console.log("Time difference in minutes:", timeDifferenceInMinutes);
+                }
+
+                var newLogRef = database.ref('timeLogs/' + dateKey);
+                newLogRef.once('value', function (snapshot) {
+                    var data = snapshot.val() || {};
+
+                    if (timeType === 'timeIn') {
+                        data[timeType] = timeValue;
+                        data['minutesLate'] = timeDifferenceInMinutes;
+                    } else if (timeType === 'timeOut') {
+
+                        data['timeOut'] = timeValue; // Ensure that timeOut value is correctly assigned here
+                        data['minutesLate'] = data['minutesLate'] || 0;
+                    }
+                    data['dayOfWeek'] = dayOfWeek;
+                    data['date'] = formatDateKey(currentDate);
+
+                    newLogRef.set(data);
+                    document.getElementById("timeDisplay").innerHTML = "Day of the Week: " + dayOfWeek + "<br>" +
+                        timeType.charAt(0).toUpperCase() + timeType.slice(1) + ": " + timeValue + "<br>Time logged successfully!";
+                });
+
+            });
+        }
+
+
+
+        function formatDateKey(date) {
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var day = date.getDate().toString().padStart(2, '0');
+            var year = date.getFullYear();
+            return `${month}-${day}-${year}`;
+        }
+
+
+
+        function getDayOfWeek() {
+            var daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+            var today = new Date();
+            return daysOfWeek[today.getDay()];
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/popper.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+
+</html>
