@@ -1,120 +1,87 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Days of the Week</title>
+    <title>DCS | Home</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        .sidebar {
-            width: 80px;
-            background-color: #333;
-            transition: width 0.3s;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            padding: 20px 0;
-        }
-
         .content {
             flex: 1;
             padding: 20px;
         }
 
-        .sidebar.active {
-            width: 80px;
-        }
-
-        .sidebar h2 {
-            color: #fff;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .sidebar ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar li {
-            text-align: left;
-        }
-
-        .sidebar a {
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
-            display: block;
+        input[type="time"],
+        button {
+            margin: 10px 0;
             padding: 10px;
+            max-width: 100%;
+            width: 100%;
+            box-sizing: border-box;
         }
 
-        .sidebar a:hover {
-            color: #ffd700;
-        }
-
-        h1 {
+        #currentDate {
             text-align: center;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
             margin-bottom: 20px;
         }
 
-        label {
-            display: inline-block;
-            width: 100px;
-            font-weight: bold;
-        }
-
-        .input-group {
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .input-group input[type="time"] {
-            flex: 1;
-            width: auto;
-            padding: 5px;
-            border: 5px solidrgb(0, 0, 0)c;
-            border-radius: 3px;
-            margin-right: 10px;
+        .popup-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
         }
 
-        input[type="text"]:focus {
-            outline: none;
-            border-color: dodgerblue;
+        .popup-content p {
+            margin: 0 0 20px;
         }
+
+        .popup-content button {
+            padding: 10px 20px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background: #0056b3;
+        }
+
         @media only screen and (max-width: 768px) {
             .container {
                 flex-direction: column;
             }
 
-            .sidebar {
-                width: 100vw;
-            }
+
 
             .content {
-                width: 90vw;
+                width: 100%;
             }
-            .contactHours{
-                width: 20vw;
-            }
+
             input[type="time"],
             button {
                 margin: 10px 0;
@@ -128,16 +95,68 @@
 
 <body>
 
-    <div class="container">
-        <div class="sidebar" id="sidebar">
-            <h2>Menu</h2>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="records.html">Records</a></li>
-                <li><a href="#">Schedule</a></li>
-            </ul>
+    <!-- Pop-up for unauthenticated users -->
+    <div id="popup" class="popup">
+        <div class="popup-content" id = "popup-content">
+            <p id="popup-text"></p>
+            <button onclick="redirectToLogin()">OK</button>
         </div>
-        <div class="content">
+    </div>
+
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="active">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+            <div class="p-4">
+                <h1><a href="index.html" class="logo">DCS</a></h1>
+                <ul class="list-unstyled components mb-5">
+                    <li class="active">
+                        <a href="homepage.html?"><span class="fa fa-home mr-3"></span> Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-user mr-3"></span> About</a>
+                    </li>
+                    <li>
+                        <a href="records.html?"><span class="fa fa-briefcase mr-3"></span> Records</a>
+                    </li>
+                    <li>
+                        <a href="schedule.html?"><span class="fa fa-sticky-note mr-3"></span> Schedule</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-paper-plane mr-3"></span> Contact Us</a>
+                    </li>
+                    <li>
+                        <a href="#" id="logout"><span class="fa fa-paper-plane mr-3"></span> Logout</a>
+                    </li>
+                </ul>
+
+                <!--<div class="mb-5">
+					<h3 class="h6 mb-3">Subscribe for newsletter</h3>
+					<form action="#" class="subscribe-form">
+						<div class="form-group d-flex">
+							<div class="icon"><span class="icon-paper-plane"></span></div>
+							<input type="text" class="form-control" placeholder="Enter Email Address">
+						</div>
+					</form>
+				</div>-->
+
+                <div class="footer">
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | Jerwin F. Gubat
+                        <i class="icon-heart" aria-hidden="true"></i> <a href="https://colorlib.com"
+                            target="_blank">Colorlib.com</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+
+            </div>
+        </nav>
+        <div id="content" class="p-4 p-md-5 pt-5">
             <ul>
                 <li>
                     <form id="monday-form">
@@ -145,7 +164,8 @@
                         <div class="input-group">
                             <input type="time" id="monday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="monday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
@@ -156,7 +176,8 @@
                         <div class="input-group">
                             <input type="time" id="tuesday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="tuesday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
@@ -167,7 +188,8 @@
                         <div class="input-group">
                             <input type="time" id="wednesday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="wednesday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
@@ -178,7 +200,8 @@
                         <div class="input-group">
                             <input type="time" id="thursday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="thursday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
@@ -189,7 +212,8 @@
                         <div class="input-group">
                             <input type="time" id="friday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="friday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
@@ -200,18 +224,25 @@
                         <div class="input-group">
                             <input type="time" id="saturday-timein" name="timein" placeholder="Time In">
                             <input type="time" id="saturday-timeout" name="timeout" placeholder="Time Out">
-                            <input type="number" min="0" class = "contactHours" id="contactHours" placeholder="Contact Hours">
+                            <input type="number" min="0" class="contactHours" id="contactHours"
+                                placeholder="Contact Hours">
                             <input type="submit" value="Submit">
                         </div>
                     </form>
                 </li>
             </ul>
-
+            <div id="timeDisplay"></div>
         </div>
     </div>
+    <script>
+        function redirectToLogin() {
+            window.location.href = 'index.html';
+        }
+    </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
         import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -225,6 +256,21 @@
             measurementId: "G-HKYCRTSC73"
         };
         firebase.initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        console.log(auth);
+
+        //bypass counter
+        const isAuthenticated = localStorage.getItem('authToken');
+        console.log(isAuthenticated);
+
+        if (isAuthenticated == 'false') {
+            document.getElementById('popup-text').innerText = "You need to login first";
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('popup-content').style.display = 'block';
+        } else if (isAuthenticated == 'true') {
+            document.getElementById('popup').style.display = 'none';
+        }
 
         const database = firebase.database();
 
@@ -258,10 +304,22 @@
             }).catch((error) => {
                 console.error('Error saving data:', error);
             });
+
         }
+        document.getElementById("logout").addEventListener("click", function () {
+                event.preventDefault();
+                signOut(auth).then(() => {
+                    console.log('Sign-out successful.');
+                    document.getElementById('popup').style.display = 'flex';
+                    document.getElementById('popup-content').style.display = 'block';
+                    document.getElementById('popup-text').innerText = "Signout Successful";
+                    localStorage.setItem('authToken', 'false');
 
-
-
+                }).catch((error) => {
+                    console.log(error);
+                });
+            });
+        
 
         // Add event listeners to each form
         document.getElementById('monday-form').addEventListener('submit', (event) => handleSubmit(event, 'monday'));
@@ -271,6 +329,10 @@
         document.getElementById('friday-form').addEventListener('submit', (event) => handleSubmit(event, 'friday'));
         document.getElementById('saturday-form').addEventListener('submit', (event) => handleSubmit(event, 'saturday'));
     </script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
 
 

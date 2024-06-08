@@ -8218,7 +8218,8 @@ h1, h2, h3, h4, h5,
   #sidebar .h6 {
     color: #fff; }
   #sidebar.active {
-    margin-left: -270px; }
+    margin-left: -270px; 
+  }
     #sidebar.active .custom-menu {
       margin-right: -50px; }
   #sidebar h1 {

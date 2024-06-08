@@ -2,14 +2,60 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Records</title>
+    <title>DCS | Records</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .popup-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            width: 250px;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .popup-content p {
+            margin: 0 0 20px;
+        }
+
+        .popup-content button {
+            padding: 10px 20px;
+            border: none;
+            background: #007BFF;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .popup-content button:hover {
+            background: #0056b3;
         }
 
         table {
@@ -27,31 +73,144 @@
         th {
             background-color: #f2f2f2;
         }
-        
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            margin-left: 4vw;
+            max-width: 85vw;
+        }
+
+        input[type="time"],
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #currentDate {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Media queries for responsiveness */
+        @media only screen and (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+
+
+            .content {
+                width: 100%;
+            }
+
+            input[type="time"],
+            button {
+                margin: 10px 0;
+                padding: 10px;
+                width: 90vw;
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
 
+
 <body>
+    <div id="popup" class="popup">
+		<div class="popup-content" id = 'popup-content'>
+			<p id = popup-text></p>
+			<button onclick="redirectToLogin()">OK</button>
+		</div>
+	</div>
+    <div class="wrapper d-flex align-items-stretch">
+        <nav id="sidebar" class="active">
+            <div class="custom-menu">
+                <button type="button" id="sidebarCollapse" class="btn btn-primary">
+                    <i class="fa fa-bars"></i>
+                    <span class="sr-only">Toggle Menu</span>
+                </button>
+            </div>
+            <div class="p-4">
+                <h1><a href="homepage.html" class="logo">DCS</a></h1>
+                <ul class="list-unstyled components mb-5">
+                    <li class="active">
+                        <a href="homepage.html?"><span class="fa fa-home mr-3"></span> Home</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-user mr-3"></span> About</a>
+                    </li>
+                    <li>
+                        <a href="records.html?"><span class="fa fa-briefcase mr-3"></span> Records</a>
+                    </li>
+                    <li>
+                        <a href="schedule.html?"><span class="fa fa-sticky-note mr-3"></span> Schedule</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fa fa-paper-plane mr-3"></span> Contact Us</a>
+                    </li>
+                    <li>
+                        <a href="#" id = "logout"><span class="fa fa-paper-plane mr-3"></span> Logout</a>
+                    </li>
+                </ul>
+
+                <!--<div class="mb-5">
+					<h3 class="h6 mb-3">Subscribe for newsletter</h3>
+					<form action="#" class="subscribe-form">
+						<div class="form-group d-flex">
+							<div class="icon"><span class="icon-paper-plane"></span></div>
+							<input type="text" class="form-control" placeholder="Enter Email Address">
+						</div>
+					</form>
+				</div>-->
+
+                <div class="footer">
+                    <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        Copyright &copy;
+                        <script>document.write(new Date().getFullYear());</script> All rights reserved | Jerwin F. Gubat
+                        <i class="icon-heart" aria-hidden="true"></i> <a href="https://colorlib.com"
+                            target="_blank">Colorlib.com</a>
+                        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    </p>
+                </div>
+
+            </div>
+        </nav>
+
+        <!-- Page Content  -->
+        <div id="content" class="p-4 p-md-5 pt-5">
+            <table id="timeLogTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Day of Week</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            <div id="timeDisplay"></div>
+        </div>
+    </div>
     <h2>Time Log</h2>
-    <table id="timeLogTable">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Day of Week</th>
-                <th>Time In</th>
-                <th>Time Out</th>
-                <th>Rate</th>
-            </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-    </table>
-
-    <!-- Firebase Configuration -->
+    <script>
+        function redirectToLogin() {
+			window.location.href = 'index.html';
+		}
+    </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
         import { getDatabase, ref, onValue, push, get, set } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-database.js";
 
         const firebaseConfig = {
@@ -64,8 +223,27 @@
             appId: "1:134877240078:web:7d0eae6b605a8c1470155f",
             measurementId: "G-HKYCRTSC73"
         };
-
+        //yung firebase config na set is from firebase, ginagamit to para magkaroon ng connecttion ang system and ang database
         firebase.initializeApp(firebaseConfig);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        console.log(auth);
+
+        function redirectToLogin() {
+			window.location.href = 'index.html';
+		}
+        //bypass counter
+        const isAuthenticated = localStorage.getItem('authToken');
+        console.log(isAuthenticated);
+
+        if (isAuthenticated == 'false') {
+            document.getElementById('popup-text').innerText = "You need to login first";
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('popup-content').style.display = 'block';
+        } else if (isAuthenticated == 'true') {
+            document.getElementById('popup').style.display = 'none';
+        }
+
 
         var database = firebase.database();
 
@@ -118,7 +296,24 @@
 
             populateTable(snapshot);
         });
+        document.getElementById("logout").addEventListener("click", function () {
+			event.preventDefault();
+			signOut(auth).then(() => {
+				console.log('Sign-out successful.');
+				document.getElementById('popup').style.display = 'flex';
+				document.getElementById('popup-content').style.display = 'block';
+				document.getElementById('popup-text').innerText = "Signout Successful";
+				localStorage.setItem('authToken', 'false');
+				
+			}).catch((error) => {
+				console.log('An error happened.');
+			});
+		});
     </script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/7.14.1-0/firebase.js"></script>
 </body>
 
