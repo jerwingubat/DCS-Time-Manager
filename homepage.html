@@ -16,10 +16,11 @@
 			padding: 20px;
 		}
 
-		.timeForm{
+		.timeForm {
 			width: 75vw;
 			background-color: #0056b3;
 		}
+
 		input[type="time"],
 		button {
 			margin: 10px 0;
@@ -98,10 +99,10 @@
 </head>
 
 <body>
-	
+
 	<div id="popup" class="popup">
-		<div class="popup-content" id = 'popup-content'>
-			<p id = popup-text></p>
+		<div class="popup-content" id='popup-content'>
+			<p id=popup-text></p>
 			<button onclick="redirectToLogin()">OK</button>
 		</div>
 	</div>
@@ -160,7 +161,7 @@
 		</nav>
 		<div id="content" class="p-4 p-md-5 pt-5" style="width: 50%; margin-left: 3vw;">
 			<form id="timeForm">
-				<h2>Time Tracker</h2>
+				<h1>Time Tracker</h1>
 				<div id="currentDate"></div>
 				<div id="weekDay"></div>
 				<label for="timeIn">Time In:</label>
@@ -175,16 +176,18 @@
 		</div>
 		<div id="content" class="p-4 p-md-5 pt-5" style="width: 50%; margin-left: 3vw;">
 			<form id="timeForm">
-				<h2>Overall Revenue</h2>
-				<div id="currentDate"></div>
-				<div id="weekDay"></div>
-				<label for="timeIn">Time In:</label>
-				<input type="time" id="timeIn" name="timeIn" required>
-				<button type="button" id="submitTimeIn">Submit Time In</button>
+				<h1>Overall Revenue</h1>
+				<label for="dateRange">Select Date Range:</label>
+				<select id="dateRange" name="dateRange">
+					<!-- dynamic na dropdown from javascript -->
+				</select>
 				<br>
-				<label for="timeOut">Time Out:</label>
-				<input type="time" id="timeOut" name="timeOut" required>
-				<button type="button" id="submitTimeOut">Submit Time Out</button>
+				<h5>Total Revenue for current Pay Period</h5>
+				<h3><span>&#8369;<span id="valueDisplay"> 27,000</span></span></h3>
+				<h5>No. of Hours: <span id = "numberOfHours">101</span></h5>
+				<h5>Tardiness: <span id = "tardiness"> 1,300</span></h5>
+				<h5>5% EWT: <span id = "withholdingTax"> 1,500</span></h5>
+				<h5>Gross Pay: <span id = "grossPay"> 29,800</span></h5>
 			</form>
 			<div id="timeDisplay"></div>
 		</div>
@@ -229,12 +232,30 @@
 		} else if (isAuthenticated == 'true') {
 			document.getElementById('popup').style.display = 'none';
 		}
+		
+		
 		document.getElementById("submitTimeIn").addEventListener("click", function () {
 			submitTime('timeIn');
 		});
 
 		document.getElementById("submitTimeOut").addEventListener("click", function () {
 			submitTime('timeOut');
+		});
+		document.addEventListener("DOMContentLoaded", function () {
+			const dateRangeSelect = document.getElementById('dateRange');
+			const currentDate = new Date();
+			const currentYear = currentDate.getFullYear();
+			const currentMonth = currentDate.getMonth();
+			const months = [
+				"January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"
+			];
+
+			for (let month = 0; month <= currentMonth; month++) {
+				let daysInMonth = new Date(currentYear, month + 1, 0).getDate();
+				dateRangeSelect.options.add(new Option(`${months[month]} 1-15`, `${months[month]} 1-15`));
+				dateRangeSelect.options.add(new Option(`${months[month]} 16-${daysInMonth}`, `${months[month]} 16-${daysInMonth}`));
+			}
 		});
 
 		var currentDateElement = document.getElementById('currentDate');
@@ -345,7 +366,7 @@
 				document.getElementById('popup-content').style.display = 'block';
 				document.getElementById('popup-text').innerText = "Signout Successful";
 				localStorage.setItem('authToken', 'false');
-				
+
 			}).catch((error) => {
 				console.log('An error happened.');
 			});
