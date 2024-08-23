@@ -11,6 +11,10 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css">
 	<style>
+		body{
+			background: linear-gradient(to right, #d5d6ff, #a7aafc);
+		}
+
 		.content {
 			flex: 1;
 			padding: 20px;
@@ -184,10 +188,10 @@
 				<br>
 				<h5>Total Revenue for current Pay Period</h5>
 				<h3><span>&#8369;<span id="valueDisplay"> 27,000</span></span></h3>
-				<h5>No. of Hours: <span id = "numberOfHours">101</span></h5>
-				<h5>Tardiness: <span id = "tardiness"> 1,300</span></h5>
-				<h5>5% EWT: <span id = "withholdingTax"> 1,500</span></h5>
-				<h5>Gross Pay: <span id = "grossPay"> 29,800</span></h5>
+				<h5>No. of Hours: <span id="numberOfHours">101</span></h5>
+				<h5>Tardiness: <span id="tardiness"> 1,300</span></h5>
+				<h5>5% EWT: <span id="withholdingTax"> 1,500</span></h5>
+				<h5>Gross Pay: <span id="grossPay"> 29,800</span></h5>
 			</form>
 			<div id="timeDisplay"></div>
 		</div>
@@ -232,8 +236,8 @@
 		} else if (isAuthenticated == 'true') {
 			document.getElementById('popup').style.display = 'none';
 		}
-		
-		
+
+
 		document.getElementById("submitTimeIn").addEventListener("click", function () {
 			submitTime('timeIn');
 		});
